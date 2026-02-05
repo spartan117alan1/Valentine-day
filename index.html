@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Be My Valentine? ❤️</title>
+    <style>
+        * { box-sizing: border-box; touch-action: manipulation; }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffe4e1;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            text-align: center;
+            transition: background-color 1s ease;
+        }
+
+        #container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 400px;
+            z-index: 10;
+            position: relative;
+        }
+
+        h1 { color: #d63384; font-size: 1.8rem; margin: 15px 0; }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            min-height: 200px; /* Espacio para que el botón YES crezca sin romper el diseño */
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            z-index: 20;
+        }
+
+        #yesBtn { background-color: #28a745; color: white; }
+        #noBtn { 
+            background-color: #dc3545; 
+            color: white; 
+            position: relative; 
+            transition: all 0.2s ease;
+        }
+
+        .celebration { display: none; }
+        img { width: 140px; border-radius: 15px; }
+
+        .heart-particle {
+            position: absolute;
+            color: #ff69b4;
+            font-size: 20px;
+            user-select: none;
+            pointer-events: none;
+            animation: fall linear forwards;
+            z-index: 1;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(105vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="container">
+        <div id="askSection">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1eXFudXF6eXJ6eXJ6eXJ6eXJ6eXJ6eXJ6eXJ6eXJ6eXImZXA9djFfaW50ZXJuYWxfZ2lmX2J5X2lkJmN0PWc/c76IJLufpNUMo/giphy.gif" alt="Cute bear">
+            <h1>Do you wanna be my Valentine? ❤️</h1>
+            <div class="buttons">
+                <button id="yesBtn">Yes</button>
+                <button id="noBtn">No</button>
+            </div>
+        </div>
+
+        <div id="celebrationSection" class="celebration">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmc2ZzZ6eXJ6eXJ6eXJ6eXJ6eXJ6eXJ6eXJ6eXJ6eXImZXA9djFfaW50ZXJuYWxfZ2lmX2J5X2lkJmN0PWc/l41lH4ADRtAYnGsLe/giphy.gif" alt="Happy dance">
+            <h1>¡SIII! ❤️</h1>
+            <p>¡Eres la mejor persona del mundo!</p>
+        </div>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const askSection = document.getElementById('askSection');
+        const celebrationSection = document.getElementById('celebrationSection');
+        const music = document.getElementById('bgMusic');
+
+        let yesSize = 1.2;
+
+        function moveNoButton() {
+            // Calculamos límites para que no se salga de la pantalla visible
+            const padding = 50;
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - padding);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - padding);
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
+
+            // Hacer crecer el botón YES
+            yesSize += 0.4;
+            yesBtn.style.fontSize = `${yesSize}rem`;
+            yesBtn.style.padding = `${10 + (yesSize * 5)}px ${20 + (yesSize * 10)}px`;
+        }
+
+        // Evento para PC
+        noBtn.addEventListener('mouseover', moveNoButton);
+        
+        // Evento para Móvil (en cuanto se toca)
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Evita el clic accidental
+            moveNoButton();
+        });
+
+        yesBtn.addEventListener('click', () => {
+            askSection.style.display = 'none';
+            celebrationSection.style.display = 'block';
+            document.body.style.backgroundColor = '#ff69b4';
+            music.play().catch(e => console.log("Audio play blocked"));
+            setInterval(createHeart, 150);
+        });
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-particle');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '-5vh';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 4000);
+        }
+    </script>
+</body>
+</html>
